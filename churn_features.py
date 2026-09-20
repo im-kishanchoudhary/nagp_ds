@@ -23,9 +23,6 @@ class ChurnFeatureAdder(BaseEstimator, TransformerMixin):
     def transform(self, X):
         customers = X.copy()
 
-        # blank for new customers, and both spend features below divide by it
-        customers["TotalCharges"] = pd.to_numeric(customers["TotalCharges"], errors="coerce").fillna(0)
-
         service_count = (customers[self.SERVICE_COLUMNS] == "Yes").sum(axis=1)
         customers["SpendPerService"] = customers["MonthlyCharges"] / service_count.clip(lower=1)
 
